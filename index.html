@@ -176,10 +176,10 @@
     const musica = document.getElementById("musica");
     const pantallaInicio = document.getElementById("inicio");
     const botonMute = document.getElementById("mute");
-
-    let puntaje = 0;
+    
     let juegoTerminado = false;
     let juegoIniciado = false;
+    let juegoPausado = false;
 
     const frases = [
       "Gracias por hacerme tan feliz ❤️",
@@ -227,7 +227,7 @@
     });
 
     function crearCorazon() {
-      if (!juegoIniciado || juegoTerminado) return;
+      if (!juegoIniciado || juegoTerminado || juegoPausado) return;
 
       const corazon = document.createElement("div");
       corazon.classList.add("corazon");
@@ -239,12 +239,17 @@
       let posicionY = -50;
       let velocidad = 3 + Math.random() * 3;
 
-      const intervalo = setInterval(function() {
+       const intervalo = setInterval(function() {
         if (juegoTerminado) {
           clearInterval(intervalo);
           corazon.remove();
           return;
         }
+
+  if (juegoPausado) return;
+
+  posicionY += velocidad;
+  corazon.style.top = posicionY + "px";
 
         posicionY += velocidad;
         corazon.style.top = posicionY + "px";
@@ -303,10 +308,16 @@
       }
     }
 
-    function mostrarMensaje(texto) {
+   function mostrarMensaje(texto) {
+      juegoPausado = true;
       textoMensaje.innerHTML = texto;
       mensaje.style.display = "block";
     }
+
+function cerrarMensaje() {
+  juegoPausado = false;
+  mensaje.style.display = "none";
+}
 
     function cerrarMensaje() {
       mensaje.style.display = "none";
